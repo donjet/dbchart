@@ -9,7 +9,7 @@ import csv
 import string
 import getopt
 import MySQLdb
-
+import all_code
 
 def usage():
     print("-h --help: print this help message.")
@@ -17,7 +17,9 @@ def usage():
     print("-c --code: stock code.")
 
 
-def db_to_csv():
+def db_to_csv(stk_code):
+    global time_quarter_set
+
     conn = MySQLdb.connect(
             host = 'localhost',
             port = 3306,
@@ -28,7 +30,16 @@ def db_to_csv():
     cur = conn.cursor()
     cur.execute('SET NAMES UTF8')
 
+    sql_cmd = ""
+    for j in range(len(all_code.time_quarter_set)):
+        sql_cmd += "select * from " + all_code.time_quarter_set[j] + " where code=" + "'" + \
+                stk_code + "'"
+        if j < (len(all_code.time_quarter_set)-1):
+            sql_cmd += " union "
+    print sql_cmd
     try:
+        cur.execute(sql_cmd)
+        '''
         cur.execute("select * from Y17Q2 where                \
         code='600176.SH' union select * from Y17Q1 where code='600176.SH' union     \
         select * from Y16Q4 where code='600176.SH' union select * from Y16Q3        \
@@ -46,6 +57,7 @@ def db_to_csv():
         code='600176.SH'  union select * from Y12Q3 where code='600176.SH'          \
         union select * from Y12Q2 where code='600176.SH'  union select * from       \
         Y12Q1 where code='600176.SH' ;")
+        '''
     except:
         print("exception!")
         return
@@ -78,7 +90,9 @@ def get_from_db(argv):
         elif opt in("-c","--code"):
             stk_code = value
             print(stk_code)
-            db_to_csv()
+            db_to_csv(stk_code)
+        else:
+            usage()
 
 
 if __name__ == "__main__":
