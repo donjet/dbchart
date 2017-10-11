@@ -14,10 +14,11 @@ import all_code
 def usage():
     print("-h --help: print this help message.")
     print("-f --file: csv file used to draw chart.")
-    print("-c --code: stock code.")
+    print("-c --code: only single stock code.")
+    print("-a --all:  recreate all individual table.")
 
 
-def db_to_csv(stk_code):
+def create_stk_tbl(stk_code):
     global time_quarter_set
 
     conn = MySQLdb.connect(
@@ -29,17 +30,8 @@ def db_to_csv(stk_code):
             use_unicode=True)
     cur = conn.cursor()
     cur.execute('SET NAMES UTF8')
-
-    sql_cmd = ""
-    for j in range(len(all_code.time_quarter_set)):
-        sql_cmd += "select * from " + all_code.time_quarter_set[j] + " where code=" + "'" + \
-                stk_code + "'"
-        if j < (len(all_code.time_quarter_set)-1):
-            sql_cmd += " union "
-    print sql_cmd
-    try:
-        cur.execute(sql_cmd)
-        '''
+    
+    '''
         cur.execute("select * from Y17Q2 where                \
         code='600176.SH' union select * from Y17Q1 where code='600176.SH' union     \
         select * from Y16Q4 where code='600176.SH' union select * from Y16Q3        \
@@ -57,23 +49,46 @@ def db_to_csv(stk_code):
         code='600176.SH'  union select * from Y12Q3 where code='600176.SH'          \
         union select * from Y12Q2 where code='600176.SH'  union select * from       \
         Y12Q1 where code='600176.SH' ;")
-        '''
+    '''
+    sql_cmd = "drop table if exists "+stk_code.split('.')[1]+stk_code.split('.')[0]
+    try:
+        cur.execute(sql_cmd)
+    except:
+        print("exception!")
+        return
+    conn.commit()
+
+    sql_cmd = "create table "+stk_code.split('.')[1]+stk_code.split('.')[0]
+    #sql_cmd = ""
+    for j in range(len(all_code.time_quarter_set)):
+        sql_cmd += " select * from " + all_code.time_quarter_set[j] + " where code=" + "'" + \
+                stk_code + "'"
+        if j < (len(all_code.time_quarter_set)-1):
+            sql_cmd += " union "
+    print sql_cmd
+    try:
+        cur.execute(sql_cmd)
     except:
         print("exception!")
         return
 
     for row in cur.fetchall():
-        print(row[1].decode('utf-8'))
+        print(row)
+        #print(row[1].decode('utf-8'))
 
     conn.commit()
 
     cur.close()
     conn.close()
 
-
+def create_all_tbl():
+    for j in range(len(all_code.all_stk_codes)):
+        create_stk_tbl(all_code.all_stk_codes[j])
+        
 def get_from_db(argv):
     try:
-        opts,args = getopt.getopt(argv[1:], 'hf:c:',['help','file=','code='])
+        opts,args = getopt.getopt(argv[1:],
+                'haf:c:s:',['help','all','file=','code=','show='])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
@@ -90,7 +105,11 @@ def get_from_db(argv):
         elif opt in("-c","--code"):
             stk_code = value
             print(stk_code)
-            db_to_csv(stk_code)
+            create_stk_tbl(stk_code)
+        elif opt in("-a","--all"):
+            create_all_tbl()
+        elif opt in("-s","--show"):
+            draw_chart_by_tbl()
         else:
             usage()
 
