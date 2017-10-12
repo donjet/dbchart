@@ -78,6 +78,20 @@ def create_stk_tbl(stk_code):
 
     conn.commit()
 
+    '''
+    SELECT * FROM passwd INTO OUTFILE './all_codes.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\r\n';
+    '''
+    sql_cmd = "SELECT * FROM  "+stk_code.split('.')[1]+stk_code.split('.')[0] + \
+                " INTO OUTFILE '/tmp/" + stk_code.split('.')[1]+stk_code.split('.')[0] + \
+                ".csv' FIELDS TERMINATED BY ','" + " LINES TERMINATED BY '\\r\\n'" 
+    print sql_cmd
+    try:
+        cur.execute(sql_cmd)
+    except:
+        print("exception!")
+        return
+    conn.commit()
+
     cur.close()
     conn.close()
 
