@@ -130,6 +130,7 @@ def chart_it(argv):
     global data_set_len
     global quarter_list
 
+    print(argv)
     data_set_len = len(all_code.time_quarter_set)
     quarter_list = list(all_code.time_quarter_set)
     try:

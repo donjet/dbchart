@@ -10,6 +10,7 @@ import string
 import getopt
 import MySQLdb
 import all_code
+import chart_csv
 
 def usage():
     print("-h --help: print this help message.")
@@ -120,6 +121,9 @@ def get_from_db(argv):
             stk_code = value
             print(stk_code)
             create_stk_tbl(stk_code)
+            chart_csv.chart_it(["","-f", "/tmp/" + stk_code.split('.')[1]
+                    +stk_code.split('.')[0] +
+                    ".csv"])
         elif opt in("-a","--all"):
             create_all_tbl()
         elif opt in("-s","--show"):
