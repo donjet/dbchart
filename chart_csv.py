@@ -24,19 +24,23 @@ def paint(csv_content, csv_file_name):
 
     fg = pl.figure()
     ax1 = fg.add_subplot(221)
+    ax1.set_title("Revenue Profit Gross",fontsize=12)
     ax1.plot(list(range(data_set_len)), csv_content[2][1:],0.4, 'r')
     ax1.plot(list(range(data_set_len)), csv_content[5][1:],0.4, 'g')
 
     ax2 = ax1.twinx()
-    ax2.plot(list(range(data_set_len)), csv_content[1][1:], 'b')
+    ax2.plot(list(range(data_set_len)), csv_content[1][1:], 'black')
 
     ax3 = fg.add_subplot(222)
+    ax3.set_title("ROE",fontsize=12)
     ax3.plot(list(range(data_set_len)), csv_content[0][1:], 'y')
 
     ax4 = fg.add_subplot(223)
-    ax4.plot(list(range(data_set_len)), csv_content[5][1:], 'g')
+    ax4.set_title("Cash Flow vs Profit",fontsize=12)
+    ax4.plot(list(range(data_set_len)), csv_content[5][1:], 'b')
     ax4.plot(list(range(data_set_len)), csv_content[8][1:], 'r')
 
+    pl.tight_layout()
     pl.savefig(str(png_file_name))
     pl.close()
 
