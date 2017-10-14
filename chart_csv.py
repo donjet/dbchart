@@ -23,12 +23,20 @@ def paint(csv_content, csv_file_name):
     png_file_name = csv_file_name.split('.')[0]
 
     fg = pl.figure()
-    ax1 = fg.add_subplot(111)
-    ax1.plot(list(range(data_set_len)), csv_content[2][1:], 'r')
-    ax1.plot(list(range(data_set_len)), csv_content[5][1:], 'g')
+    ax1 = fg.add_subplot(221)
+    ax1.plot(list(range(data_set_len)), csv_content[2][1:],0.4, 'r')
+    ax1.plot(list(range(data_set_len)), csv_content[5][1:],0.4, 'g')
 
     ax2 = ax1.twinx()
     ax2.plot(list(range(data_set_len)), csv_content[1][1:], 'b')
+
+    ax3 = fg.add_subplot(222)
+    ax3.plot(list(range(data_set_len)), csv_content[0][1:], 'y')
+
+    ax4 = fg.add_subplot(223)
+    ax4.plot(list(range(data_set_len)), csv_content[5][1:], 'g')
+    ax4.plot(list(range(data_set_len)), csv_content[8][1:], 'r')
+
     pl.savefig(str(png_file_name))
     pl.close()
 
@@ -51,6 +59,8 @@ def adjust_to_quarter(csv_content):
             csv_content[2][time_slot - j] = string.atof(csv_content[2][time_slot -j])
             csv_content[5][time_slot - j] = string.atof(csv_content[5][time_slot -j])
         csv_content[1][time_slot - j] = string.atof(csv_content[1][time_slot -j])
+        csv_content[0][time_slot - j] = string.atof(csv_content[0][time_slot -j])
+        csv_content[8][time_slot - j] = string.atof(csv_content[8][time_slot -j])
 
     for j in range(9):
         print csv_content[j]

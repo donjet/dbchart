@@ -2,9 +2,14 @@
 ## -*- coding: utf-8 -*-
 
 
+time_quarter_set = ('Y15Q1X','Y15Q2X','Y15Q3X','Y15Q4X',\
+		    'Y16Q1X','Y16Q2X','Y16Q3X','Y16Q4X',\
+                    'Y17Q1X','Y17Q2X')
+"""
 time_quarter_set = ('Y12Q1','Y12Q2','Y12Q3','Y12Q4','Y13Q1','Y13Q2','Y13Q3','Y13Q4',\
 		    'Y14Q1','Y14Q2','Y14Q3','Y14Q4','Y15Q1','Y15Q2','Y15Q3','Y15Q4',\
 		    'Y16Q1','Y16Q2','Y16Q3','Y16Q4','Y17Q1','Y17Q2')
+"""
 
 
 all_stk_codes = (
