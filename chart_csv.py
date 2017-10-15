@@ -21,6 +21,7 @@ def paint(csv_content, csv_file_name):
     global data_set_len
 
     png_file_name = csv_file_name.split('.')[0]
+    data_set_len = len(csv_content[0]) - 1
 
     fg = pl.figure()
     ax1 = fg.add_subplot(221)
@@ -52,7 +53,9 @@ def adjust_to_quarter(csv_content):
     list_prft = [1,1,1]
     list_gros = [1,1,1]
 
-    time_slot = data_set_len
+    time_slot = len(csv_content[0]) - 1
+    print("@@@@@@@@@@@@@@@@@@@@@")
+    print( time_slot)
     for j in range(time_slot):
 	if not quarter_list[time_slot - j -1].endswith('Q1X'):
             csv_content[2][time_slot - j] = ( string.atof(csv_content[2][time_slot -j]) -\
@@ -64,7 +67,10 @@ def adjust_to_quarter(csv_content):
             csv_content[5][time_slot - j] = string.atof(csv_content[5][time_slot -j])
         csv_content[1][time_slot - j] = string.atof(csv_content[1][time_slot -j])
         csv_content[0][time_slot - j] = string.atof(csv_content[0][time_slot -j])
-        csv_content[8][time_slot - j] = string.atof(csv_content[8][time_slot -j])
+        if csv_content[8][time_slot - j] == str('\N'):
+            csv_content[8][time_slot - j] = 0
+        else:
+            csv_content[8][time_slot - j] = string.atof(csv_content[8][time_slot -j])
 
     for j in range(9):
         print csv_content[j]

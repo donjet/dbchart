@@ -7,7 +7,7 @@ time_quarter_set = ('Y12Q1X','Y12Q2X','Y12Q3X','Y12Q4X', \
 		    'Y14Q1X','Y14Q2X','Y14Q3X','Y14Q4X', \
                     'Y15Q1X','Y15Q2X','Y15Q3X','Y15Q4X', \
 		    'Y16Q1X','Y16Q2X','Y16Q3X','Y16Q4X', \
-                    'Y17Q1X','Y17Q2X')
+                    'Y17Q1X','Y17Q2X') #,'Y17Q3X')
 """
 time_quarter_set = ('Y12Q1','Y12Q2','Y12Q3','Y12Q4','Y13Q1','Y13Q2','Y13Q3','Y13Q4',\
 		    'Y14Q1','Y14Q2','Y14Q3','Y14Q4','Y15Q1','Y15Q2','Y15Q3','Y15Q4',\
