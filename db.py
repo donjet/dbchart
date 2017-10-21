@@ -96,9 +96,11 @@ def create_stk_tbl(stk_code):
     cur.close()
     conn.close()
 
-def create_all_tbl():
+def create_all_tbl_draw():
     for j in range(len(all_code.all_stk_codes)):
         create_stk_tbl(all_code.all_stk_codes[j])
+        chart_csv.chart_it(["","-f", "/tmp/" + all_code.all_stk_codes[j].split('.')[1]
+                    + all_code.all_stk_codes[j].split('.')[0] + ".csv"])
         
 def get_from_db(argv):
     try:
@@ -122,11 +124,10 @@ def get_from_db(argv):
             print(stk_code)
             create_stk_tbl(stk_code)
             chart_csv.chart_it(["","-f", "/tmp/" + stk_code.split('.')[1]
-                    +stk_code.split('.')[0] +
-                    ".csv"])
+                    +stk_code.split('.')[0] + ".csv"])
         elif opt in("-a","--all"):
-            create_all_tbl()
-        elif opt in("-s","--show"):
+            create_all_tbl_draw()
+        elif opt in("-l","--latest"):
             draw_chart_by_tbl()
         else:
             usage()

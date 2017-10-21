@@ -1,0 +1,89 @@
+######################################################################################################################
+1.Create table:
+
+CREATE TABLE IF NOT EXISTS `Y17Q2`(
+         code CHAR(9) NOT NULL,
+         name VARCHAR(8) NOT NULL,
+         aps         FLOAT,
+         roe         FLOAT,
+         cfps        FLOAT,
+         yoy_profit  FLOAT,
+         gross       FLOAT,
+         eps         FLOAT,
+         revenue     FLOAT,
+         yoy_rev     FLOAT,
+         qoq_rev     FLOAT,
+         profit      FLOAT,
+         yoy_net     FLOAT,
+         qoq_net     FLOAT,	 
+          PRIMARY KEY ( code))
+       ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `Y17Q3X`(
+         code CHAR(9) NOT NULL,
+         roe         FLOAT,
+         gross       FLOAT,
+         revenue     FLOAT,
+         yoy_rev     FLOAT,
+         qoq_rev     FLOAT,
+         profit      FLOAT,
+         yoy_net     FLOAT,
+         qoq_net     FLOAT,
+	 cf_sale     FLOAT,
+         cf_sale_qoq FLOAT,
+         pe_dy       FLOAT,
+          PRIMARY KEY ( code))
+       ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+         ;
+
+CREATE TABLE IF NOT EXISTS `CF_Q_17Q2`(
+         code CHAR(9) NOT NULL,
+         name VARCHAR(8) NOT NULL,
+         cf_sale      	FLOAT,
+         cf_sale_pre    FLOAT,
+         cf_sale_qoq    FLOAT,
+         cf_invst       FLOAT,
+         cf_invst_pre   FLOAT,
+         cf_invst_qoq   FLOAT,
+         cf_finance     FLOAT,
+         cf_finance_pre FLOAT,
+         cf_finance_qoq FLOAT,
+         cf_cash        FLOAT,
+         cf_cash_pre    FLOAT,
+         cf_cash_qoq    FLOAT,
+         industry VARCHAR(10) NOT NULL,
+          PRIMARY KEY ( code))
+       ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+###########################################################################################################################
+2.Import data from csv file:
+
+load data local infile '/home/jie/Public/dbchart/overview-Y17Q2-notitle.csv' into table Y17Q3X fields terminated by ','
+         
+load data local infile '/home/jie/Public/dbchart/cash/cacheflow-Y17Q2.csv' into table CF_Q_17Q2 fields terminated by ',';
+
+###########################################################################################################################
+3. Create table from existed tables:
+create table sh600176 select * from Y17Q2 where code='600176.SH' union select * from Y17Q1 where code='600176.SH' union select * from Y16Q4 where code='600176.SH' union select * from Y16Q3 where code='600176.SH' union select * from Y16Q2 where code='600176.SH' union select * from Y16Q1 where code='600176.SH' union select * from Y15Q4 where code='600176.SH'  union select * from Y15Q3 where code='600176.SH'  union select * from Y15Q2 where code='600176.SH' union select * from Y15Q1 where code='600176.SH'  union select * from Y14Q4 where code='600176.SH'  union select * from Y14Q3 where code='600176.SH'  union select * from Y14Q2 where code='600176.SH'  union select * from Y14Q1 where code='600176.SH' union select * from Y13Q4 where code='600176.SH'  union select * from Y13Q3 where code='600176.SH'  union select * from Y13Q2 where code='600176.SH' union select * from Y13Q1 where code='600176.SH'  union select * from Y12Q4 where code='600176.SH'  union select * from Y12Q3 where code='600176.SH'  union select * from Y12Q2 where code='600176.SH'  union select * from Y12Q1 where code='600176.SH' ;
+
+select
+Y17Q2.code,Y17Q2.name,Y17Q2.roe,Y17Q2.gross,Y17Q2.revenue,Y17Q2.yoy_rev,Y17Q2.qoq_rev,Y17Q2.profit,Y17Q2.yoy_net,Y17Q2.qoq_net,CF_Q_17Q2.cf_sale,CF_Q_17Q2.cf_sale_qoq,CF_Q_17Q2.industry
+from Y17Q2 left JOIN CF_Q_17Q2 ON Y17Q2.code=CF_Q_17Q2.code where
+Y17Q2.code="600176.SH";
+
+create table test select
+Y17Q2.code,Y17Q2.name,CF_Q_17Q2.cf_sale,CF_Q_17Q2.industry from Y17Q2 left JOIN CF_Q_17Q2 ON Y17Q2.code=CF_Q_17Q2.code;
+
+create table Y17Q2X select
+Y17Q2.code,Y17Q2.roe,Y17Q2.gross,Y17Q2.revenue,Y17Q2.yoy_rev,Y17Q2.qoq_rev,Y17Q2.profit,Y17Q2.yoy_net,Y17Q2.qoq_net,CF_Q_17Q2.cf_sale,CF_Q_17Q2.cf_sale_qoq
+from Y17Q2 left JOIN CF_Q_17Q2 ON Y17Q2.code=CF_Q_17Q2.code
+ where
+Y17Q2.code="600297.SH";
+
+###########################################################################################################################
+4.Export data to csv file:
+
+SELECT * FROM passwd INTO OUTFILE './all_codes.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\r\n';
+
+SELECT * FROM SZ000055 INTO OUTFILE './SZ000055.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\r\n';
