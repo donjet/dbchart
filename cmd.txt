@@ -87,3 +87,8 @@ Y17Q2.code="600297.SH";
 SELECT * FROM passwd INTO OUTFILE './all_codes.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\r\n';
 
 SELECT * FROM SZ000055 INTO OUTFILE './SZ000055.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\r\n';
+
+5. Exclude some columns when select
+select replace(group_concat(column_name),',pe_dy','') from
+information_schema.col umns where table_name='Y17Q3X' and
+table_schema='stock_finance'

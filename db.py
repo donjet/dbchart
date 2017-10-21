@@ -103,9 +103,10 @@ def create_all_tbl_draw():
                     + all_code.all_stk_codes[j].split('.')[0] + ".csv"])
         
 def get_from_db(argv):
+    last_quarter = 0
     try:
         opts,args = getopt.getopt(argv[1:],
-                'haf:c:s:',['help','all','file=','code=','show='])
+                'lhaf:c:s:',['last','help','all','file=','code=','show='])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
@@ -123,12 +124,16 @@ def get_from_db(argv):
             stk_code = value
             print(stk_code)
             create_stk_tbl(stk_code)
-            chart_csv.chart_it(["","-f", "/tmp/" + stk_code.split('.')[1]
-                    +stk_code.split('.')[0] + ".csv"])
+            if last_quarter == 1:
+                chart_csv.chart_it(["","-l","-f", "/tmp/" + stk_code.split('.')[1]
+                        + stk_code.split('.')[0] + ".csv"])
+            else:
+                chart_csv.chart_it(["","-f", "/tmp/" + stk_code.split('.')[1]
+                        + stk_code.split('.')[0] + ".csv"])
         elif opt in("-a","--all"):
             create_all_tbl_draw()
-        elif opt in("-l","--latest"):
-            draw_chart_by_tbl()
+        elif opt in("-l","--last"):
+            last_quarter = 1
         else:
             usage()
 

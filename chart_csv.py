@@ -21,25 +21,25 @@ def paint(csv_content, csv_file_name):
     global data_set_len
 
     png_file_name = csv_file_name.split('.')[0]
-    data_set_len = len(csv_content[0]) - 1
+    data_len = len(csv_content[0]) - 1
 
     fg = pl.figure()
     ax1 = fg.add_subplot(221)
     ax1.set_title("Revenue Profit Gross",fontsize=12)
-    ax1.plot(list(range(data_set_len)), csv_content[2][1:],0.4, 'r')
-    ax1.plot(list(range(data_set_len)), csv_content[5][1:],0.4, 'g')
+    ax1.plot(list(range(data_len)), csv_content[2][1:],0.4, 'r')
+    ax1.plot(list(range(data_len)), csv_content[5][1:],0.4, 'g')
 
     ax2 = ax1.twinx()
-    ax2.plot(list(range(data_set_len)), csv_content[1][1:], 'black')
+    ax2.plot(list(range(data_len)), csv_content[1][1:], 'black')
 
     ax3 = fg.add_subplot(222)
     ax3.set_title("ROE",fontsize=12)
-    ax3.plot(list(range(data_set_len)), csv_content[0][1:], 'y')
+    ax3.plot(list(range(data_len)), csv_content[0][1:], 'y')
 
     ax4 = fg.add_subplot(223)
     ax4.set_title("Cash Flow vs Profit",fontsize=12)
-    ax4.plot(list(range(data_set_len)), csv_content[5][1:], 'b')
-    ax4.plot(list(range(data_set_len)), csv_content[8][1:], 'r')
+    ax4.plot(list(range(data_len)), csv_content[5][1:], 'b')
+    ax4.plot(list(range(data_len)), csv_content[8][1:], 'r')
 
     pl.tight_layout()
     pl.savefig(str(png_file_name))
@@ -48,31 +48,37 @@ def paint(csv_content, csv_file_name):
 
 def adjust_to_quarter(csv_content):
     global quarter_list
+    global data_set_len
 
     list_rvnu = [1,1,1]
     list_prft = [1,1,1]
     list_gros = [1,1,1]
 
     time_slot = len(csv_content[0]) - 1
-    print("@@@@@@@@@@@@@@@@@@@@@")
     print( time_slot)
     for j in range(time_slot):
-	if not quarter_list[time_slot - j -1].endswith('Q1X'):
-            csv_content[2][time_slot - j] = ( string.atof(csv_content[2][time_slot -j]) -\
+        if j < (time_slot-1):
+	    if not quarter_list[data_set_len - 1 - j ].endswith('Q1X'):
+                csv_content[2][time_slot - j ] = (
+                    string.atof(csv_content[2][time_slot -j ]) -\
                                     string.atof(csv_content[2][time_slot -j - 1]))
-            csv_content[5][time_slot - j] = ( string.atof(csv_content[5][time_slot -j]) -\
+                csv_content[5][time_slot - j ] = (
+                    string.atof(csv_content[5][time_slot -j ]) -\
                                     string.atof(csv_content[5][time_slot -j - 1]))
-        else:
-            csv_content[2][time_slot - j] = string.atof(csv_content[2][time_slot -j])
-            csv_content[5][time_slot - j] = string.atof(csv_content[5][time_slot -j])
-        csv_content[1][time_slot - j] = string.atof(csv_content[1][time_slot -j])
-        csv_content[0][time_slot - j] = string.atof(csv_content[0][time_slot -j])
-        if csv_content[8][time_slot - j] == str('\N'):
-            csv_content[8][time_slot - j] = 0
-        else:
-            csv_content[8][time_slot - j] = string.atof(csv_content[8][time_slot -j])
+            else:
+                csv_content[2][time_slot - j ] =  \
+                    string.atof(csv_content[2][time_slot -j ])
+                csv_content[5][time_slot - j ] =  \
+                    string.atof(csv_content[5][time_slot -j ])
+        csv_content[1][time_slot - j ] = string.atof(csv_content[1][time_slot - j ])
+        csv_content[0][time_slot - j ] = string.atof(csv_content[0][time_slot- j ])
+        for i in range(10):
+            if csv_content[i][time_slot - j] == str('\\N'):
+                csv_content[i][time_slot - j] = 0
+            else:
+                csv_content[i][time_slot - j] = string.atof(csv_content[i][time_slot -j])
 
-    for j in range(9):
+    for j in range(10):
         print csv_content[j]
 
 def chart_csv(csv_file_name):
@@ -140,7 +146,7 @@ def chart_it(argv):
     data_set_len = len(all_code.time_quarter_set)
     quarter_list = list(all_code.time_quarter_set)
     try:
-        opts,args = getopt.getopt(argv[1:], 'hf:d:',['help','file=','dir='])
+        opts,args = getopt.getopt(argv[1:], 'lhf:d:',['last','help','file=','dir='])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
@@ -158,6 +164,10 @@ def chart_it(argv):
             csv_dir = value
             print(csv_dir)
             chart_dir(csv_dir)
+        elif opt in("-l","--last"):
+            data_set_len = len(all_code.time_quarter_set)-1
+            quarter_list = list(all_code.time_quarter_set)
+            quarter_list.pop()
 
 
 
