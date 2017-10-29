@@ -41,16 +41,16 @@ def paint(csv_content, csv_file_name):
 
     ax4 = fg.add_subplot(223)
     ax4.set_title("Cash Flow vs Profit",fontsize=12)
-    ax4.plot(list(range(data_len)), csv_content[5][1:], 'b')
-    ax4.plot(list(range(data_len)), csv_content[8][1:], 'r')
+    ax4.plot(list(range(data_len)), csv_content[4][1:], 'b')
+    ax4.plot(list(range(data_len)), csv_content[6][1:], 'r')
 
     ax5 = fg.add_subplot(224)
-    ax5.set_title("Profit vs QoQ ",fontsize=12)
+    ax5.set_title("Profit YoY Ratio",fontsize=12)
     ax5.plot(list(range(data_len)), csv_content[5][1:], 'b')
-
+    '''
     ax6 = ax5.twinx()
-    ax6.plot(list(range(data_len)), csv_content[6][1:], 'black')
-
+    ax6.plot(list(range(data_len)), csv_content[5][1:], 'r')
+    '''
     pl.tight_layout()
     pl.savefig(str(png_file_name))
     pl.close()
@@ -60,9 +60,6 @@ def adjust_to_quarter(csv_content):
     global quarter_list
     global data_set_len
 
-    list_rvnu = [1,1,1]
-    list_prft = [1,1,1]
-    list_gros = [1,1,1]
 
     time_slot = len(csv_content[0]) - 1
     print( time_slot)
@@ -72,23 +69,23 @@ def adjust_to_quarter(csv_content):
                 csv_content[2][time_slot - j ] = (
                     string.atof(csv_content[2][time_slot -j ]) -\
                                     string.atof(csv_content[2][time_slot -j - 1]))
-                csv_content[5][time_slot - j ] = (
-                    string.atof(csv_content[5][time_slot -j ]) -\
-                                    string.atof(csv_content[5][time_slot -j - 1]))
+                csv_content[4][time_slot - j ] = (
+                    string.atof(csv_content[4][time_slot -j ]) -\
+                                    string.atof(csv_content[4][time_slot -j - 1]))
             else:
                 csv_content[2][time_slot - j ] =  \
                     string.atof(csv_content[2][time_slot -j ])
-                csv_content[5][time_slot - j ] =  \
-                    string.atof(csv_content[5][time_slot -j ])
+                csv_content[4][time_slot - j ] =  \
+                    string.atof(csv_content[4][time_slot -j ])
         csv_content[1][time_slot - j ] = string.atof(csv_content[1][time_slot - j ])
         csv_content[0][time_slot - j ] = string.atof(csv_content[0][time_slot- j ])
-        for i in range(10):
+        for i in range(8):
             if csv_content[i][time_slot - j] == str('\\N'):
                 csv_content[i][time_slot - j] = 0
             else:
                 csv_content[i][time_slot - j] = string.atof(csv_content[i][time_slot -j])
 
-    for j in range(10):
+    for j in range(8):
         print csv_content[j]
 
 def chart_csv(csv_file_name):
@@ -99,10 +96,8 @@ def chart_csv(csv_file_name):
     gross       =['gross'] 
     revenue     =['revenue'] 
     yoy_rev     =['yoy_rev'] 
-    qoq_rev     =['qoq_rev'] 
     profit      =['profit'] 
     yoy_net     =['yoy_net'] 
-    qoq_net     =['qoq_net'] 
     cf_sale     =['cf_sale'] 
     cf_sale_qoq =['cf_qoq'] 
 
@@ -113,23 +108,19 @@ def chart_csv(csv_file_name):
                 gross.append( row[2] )
                 revenue.append( row[3] )
                 yoy_rev.append( row[4] )
-                qoq_rev.append( row[5] )
-                profit.append( row[6] )
-                yoy_net.append( row[7] )
-                qoq_net.append( row[8] )
-                cf_sale.append( row[9] )
-                cf_sale_qoq.append(row[10])
+                profit.append( row[5] )
+                yoy_net.append( row[6] )
+                cf_sale.append( row[7] )
+                cf_sale_qoq.append(row[8])
                 row_count +=1
         csv_contents[0] = roe
         csv_contents[1] = gross
         csv_contents[2] = revenue
         csv_contents[3] = yoy_rev
-        csv_contents[4] = qoq_rev
-        csv_contents[5] = profit
-        csv_contents[6] = yoy_net
-        csv_contents[7] = qoq_net
-        csv_contents[8] = cf_sale
-        csv_contents[9] = cf_sale_qoq
+        csv_contents[4] = profit
+        csv_contents[5] = yoy_net
+        csv_contents[6] = cf_sale
+        csv_contents[7] = cf_sale_qoq
 
     adjust_to_quarter(csv_contents)
     paint(csv_contents, csv_file_name)

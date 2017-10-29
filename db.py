@@ -96,12 +96,17 @@ def create_stk_tbl(stk_code):
     cur.close()
     conn.close()
 
-def create_all_tbl_draw():
+def create_all_tbl_draw(skip_last_quarter):
     for j in range(len(all_code.all_stk_codes)):
         create_stk_tbl(all_code.all_stk_codes[j])
-        chart_csv.chart_it(["","-f", "/tmp/" + all_code.all_stk_codes[j].split('.')[1]
+        if skip_last_quarter == 1:
+            chart_csv.chart_it(["","-l","-f", "/tmp/" + all_code.all_stk_codes[j].split('.')[1]
                     + all_code.all_stk_codes[j].split('.')[0] + ".csv"])
-        
+        else:
+            chart_csv.chart_it(["","-f", "/tmp/" + all_code.all_stk_codes[j].split('.')[1]
+                    + all_code.all_stk_codes[j].split('.')[0] + ".csv"])
+
+
 def get_from_db(argv):
     last_quarter = 0
     try:
@@ -131,7 +136,7 @@ def get_from_db(argv):
                 chart_csv.chart_it(["","-f", "/tmp/" + stk_code.split('.')[1]
                         + stk_code.split('.')[0] + ".csv"])
         elif opt in("-a","--all"):
-            create_all_tbl_draw()
+            create_all_tbl_draw(last_quarter)
         elif opt in("-l","--last"):
             last_quarter = 1
         else:
