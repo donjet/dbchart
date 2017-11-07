@@ -122,9 +122,18 @@ def get_from_db(argv):
             usage()
             sys.exit()
         elif opt in("-f","--file"):
-            csv_file = value
-            print(csv_file)
-           #chart_csv(csv_file)
+            csv_file_name = value
+            with open(csv_file_name, 'rb') as csv_file:
+                csv_reader = csv.reader(csv_file, delimiter=',')
+                for row in csv_reader:
+                    stk_code = row[0]
+                    create_stk_tbl(stk_code)
+                    if last_quarter == 1:
+                        chart_csv.chart_it(["","-l","-f", "/tmp/" + stk_code.split('.')[1]
+                            + stk_code.split('.')[0] + ".csv"])
+                    else:
+                        chart_csv.chart_it(["","-f", "/tmp/" + stk_code.split('.')[1]
+                            + stk_code.split('.')[0] + ".csv"])
         elif opt in("-c","--code"):
             stk_code = value
             print(stk_code)
