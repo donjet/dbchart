@@ -26,18 +26,46 @@ def paint(csv_content, csv_file_name):
     fg = pl.figure()
     ax1 = fg.add_subplot(221)
     ax1.set_title("Revenue vs Gross",fontsize=12)
-    ax1.plot(list(range(data_len)), csv_content[2][1:],0.4, 'r')
+    ax1.plot(list(range(data_len)), csv_content[2][1:],0.4,'blue' )
     #ax1.plot(list(range(data_len)), csv_content[5][1:],0.4, 'g')
 
     ax2 = ax1.twinx()
-    ax2.plot(list(range(data_len)), csv_content[1][1:], 'black')
+    ax2.plot(list(range(data_len)), csv_content[1][1:], 'red')
 
     ax3 = fg.add_subplot(222)
-    ax3.set_title("ROE",fontsize=12)
+    ax3.set_title("ROE vs Profit/Y",fontsize=12)
     roe_yoy = []
-    for i in range(data_len/4 +1):
-        roe_yoy.append(csv_content[0][i*4+data_len%4])
-    ax3.plot(list(range(data_len/4)), roe_yoy[1:], 'y')
+    for i in range((data_len+3)/4) :
+        if not data_len%4:
+            roe_yoy.append(csv_content[0][i*4 + 4])
+        else:
+            roe_yoy.append(csv_content[0][i*4 +  data_len%4])
+    ax3.plot(list(range((data_len+3)/4) ), roe_yoy[0:], 'y')
+
+    ax31 = ax3.twinx()
+    cash_flow = []
+    profit = []
+    for i in range(data_len/4):
+        cash_flow.append(csv_content[6][i*4+1] + csv_content[6][i*4+2] \
+                + csv_content[6][i*4+3] + csv_content[6][i*4+4])
+        profit.append(csv_content[4][i*4+1] + csv_content[4][i*4+2] \
+                + csv_content[4][i*4+3] + csv_content[4][i*4+4])
+    i = i+1
+    cash_flow_last = 0.0
+    profit_last = 0.0
+    if  (data_len%4):
+        last_len = data_len%4
+        for j in range(last_len ):
+            cash_flow_last += csv_content[6][i*4 + j + 1]
+            profit_last += csv_content[4][i*4 + j + 1]
+        cash_flow_last = cash_flow_last * 4 / (data_len%4)
+        profit_last = profit_last * 4 / (data_len%4)
+        cash_flow.append(cash_flow_last)
+        profit.append(profit_last)
+    ax31.plot(list(range((data_len+3)/4) ), cash_flow[0:], 'black')
+    ax31.plot(list(range((data_len+3)/4) ), profit[0:], 'red')
+    print(cash_flow)
+    print(profit)
 
     ax4 = fg.add_subplot(223)
     ax4.set_title("Cash Flow vs Profit",fontsize=12)
@@ -66,24 +94,28 @@ def adjust_to_quarter(csv_content):
     for j in range(time_slot):
         if j < (time_slot-1):
 	    if not quarter_list[data_set_len - 1 - j ].endswith('Q1X'):
-                csv_content[2][time_slot - j ] = (
+                csv_content[2][time_slot - j ] = round(
                     string.atof(csv_content[2][time_slot -j ]) -\
-                                    string.atof(csv_content[2][time_slot -j - 1]))
-                csv_content[4][time_slot - j ] = (
+                                    string.atof(csv_content[2][time_slot -j - 1]),2)
+                csv_content[4][time_slot - j ] = round(
                     string.atof(csv_content[4][time_slot -j ]) -\
-                                    string.atof(csv_content[4][time_slot -j - 1]))
+                                    string.atof(csv_content[4][time_slot -j -
+                                        1]), 2)
             else:
                 csv_content[2][time_slot - j ] =  \
-                    string.atof(csv_content[2][time_slot -j ])
+                    round(string.atof(csv_content[2][time_slot -j ]),2)
                 csv_content[4][time_slot - j ] =  \
-                    string.atof(csv_content[4][time_slot -j ])
-        csv_content[1][time_slot - j ] = string.atof(csv_content[1][time_slot - j ])
-        csv_content[0][time_slot - j ] = string.atof(csv_content[0][time_slot- j ])
+                    round(string.atof(csv_content[4][time_slot -j ]),2)
+        csv_content[1][time_slot - j ] = \
+                    round(string.atof(csv_content[1][time_slot - j ]),2)
+        csv_content[0][time_slot - j ] = \
+                    round(string.atof(csv_content[0][time_slot- j ]),2)
         for i in range(8):
             if csv_content[i][time_slot - j] == str('\\N'):
                 csv_content[i][time_slot - j] = 0
             else:
-                csv_content[i][time_slot - j] = string.atof(csv_content[i][time_slot -j])
+                csv_content[i][time_slot - j] = \
+                    round(string.atof(csv_content[i][time_slot -j]),2)
 
     for j in range(8):
         print csv_content[j]
