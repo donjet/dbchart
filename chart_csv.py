@@ -45,6 +45,7 @@ def paint(csv_content, csv_file_name):
     ax31 = ax3.twinx()
     cash_flow = []
     profit = []
+    i = 0
     for i in range(data_len/4):
         cash_flow.append(csv_content[6][i*4+1] + csv_content[6][i*4+2] \
                 + csv_content[6][i*4+3] + csv_content[6][i*4+4])

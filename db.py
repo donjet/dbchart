@@ -127,6 +127,7 @@ def get_from_db(argv):
                 csv_reader = csv.reader(csv_file, delimiter=',')
                 for row in csv_reader:
                     stk_code = row[0]
+                    print stk_code
                     create_stk_tbl(stk_code)
                     if last_quarter == 1:
                         chart_csv.chart_it(["","-l","-f", "/tmp/" + stk_code.split('.')[1]
