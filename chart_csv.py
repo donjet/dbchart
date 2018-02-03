@@ -50,7 +50,7 @@ def paint(csv_content, csv_file_name):
                 + csv_content[6][i*4+3] + csv_content[6][i*4+4])
         profit.append(csv_content[4][i*4+1] + csv_content[4][i*4+2] \
                 + csv_content[4][i*4+3] + csv_content[4][i*4+4])
-    i = i+1
+    i = data_len/4
     cash_flow_last = 0.0
     profit_last = 0.0
     if  (data_len%4):
