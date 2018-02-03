@@ -23,6 +23,16 @@ def paint(csv_content, csv_file_name):
     png_file_name = csv_file_name.split('.')[0]
     data_len = len(csv_content[0]) - 1
 
+    if ((csv_content[5][data_len] > 20) and \
+               (csv_content[5][data_len-1] > 20)
+               and csv_content[5][data_len - 2] > 20) \
+       and ((csv_content[3][data_len] > 20) and \
+               (csv_content[3][data_len-1] > 20)\
+               and csv_content[3][data_len - 2] > 20):
+        pass
+    else:
+        return
+
     fg = pl.figure()
     ax1 = fg.add_subplot(221)
     ax1.set_title("Revenue vs Gross",fontsize=12)
