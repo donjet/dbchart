@@ -26,6 +26,7 @@ def create_stk_tbl(stk_code):
             host = 'localhost',
             port = 3306,
             user = 'root',
+            passwd = '123456',
             db = 'stock_finance',
             charset="utf8",
             use_unicode=True)
