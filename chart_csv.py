@@ -29,10 +29,17 @@ def paint(csv_content, csv_file_name):
        and ((csv_content[3][data_len] > 20) and \
                (csv_content[3][data_len-1] > 20)\
                and csv_content[3][data_len - 2] > 20):
-        pass
+        if ((csv_content[5][((data_len+3)/4-1)*4] > 20) and \
+                   (csv_content[5][((data_len+3)/4-2)*4] > 20)
+                   and csv_content[5][((data_len+3)/4-3)*4] > 20) \
+           and ((csv_content[3][((data_len+3)/4-1)*4] > 20) and \
+                   (csv_content[3][((data_len+3)/4-2)*4] > 20)\
+                   and csv_content[3][((data_len+3)/4-3)*4] > 20):
+            with open('/tmp/filter_data.csv', 'a+') as csvfile:
+                csvwriter = csv.writer(csvfile, delimiter=',')
+                csvwriter.writerow(os.path.basename(png_file_name)[2:])
     else:
         return
-
     fg = pl.figure()
     ax1 = fg.add_subplot(221)
     ax1.set_title("Revenue vs Gross",fontsize=12)
@@ -44,13 +51,13 @@ def paint(csv_content, csv_file_name):
 
     ax3 = fg.add_subplot(222)
     ax3.set_title("ROE vs Profit/Y",fontsize=12)
-    roe_yoy = []
+    roe_year = []
     for i in range((data_len+3)/4) :
         if not data_len%4:
-            roe_yoy.append(csv_content[0][i*4 + 4])
+            roe_year.append(csv_content[0][i*4 + 4])
         else:
-            roe_yoy.append(csv_content[0][i*4 +  data_len%4])
-    ax3.plot(list(range((data_len+3)/4) ), roe_yoy[0:], 'y')
+            roe_year.append(csv_content[0][i*4 +  data_len%4])
+    ax3.plot(list(range((data_len+3)/4) ), roe_year[0:], 'y')
 
     ax31 = ax3.twinx()
     cash_flow = []
@@ -93,8 +100,23 @@ def paint(csv_content, csv_file_name):
     pl.tight_layout()
     pl.savefig(str(png_file_name))
     pl.close()
-
-
+'''
+    if ((csv_content[5][data_len] > 20) and \
+               (csv_content[5][data_len-1] > 20)
+               and csv_content[5][data_len - 2] > 20) \
+       and ((csv_content[3][data_len] > 20) and \
+               (csv_content[3][data_len-1] > 20)\
+               and csv_content[3][data_len - 2] > 20):
+        if ((csv_content[5][((data_len+3)/4-1)*4] > 20) and \
+                   (csv_content[5][((data_len+3)/4-2)*4] > 20)
+                   and csv_content[5][((data_len+3)/4-3)*4] > 20) \
+           and ((csv_content[3][((data_len+3)/4-1)*4] > 20) and \
+                   (csv_content[3][((data_len+3)/4-2)*4] > 20)\
+                   and csv_content[3][((data_len+3)/4-3)*4] > 20):
+            with open('/tmp/filter_data.csv', 'a+') as csvfile:
+                csvwriter = csv.writer(csvfile, delimiter=',')
+                csvwriter.writerow(os.path.basename(png_file_name)[2:])
+'''
 def adjust_to_quarter(csv_content):
     global quarter_list
     global data_set_len
@@ -135,14 +157,14 @@ def chart_csv(csv_file_name):
     row_count = 0
     csv_contents = ['','','','','','','','','','']
     data_set_len = len(all_code.time_quarter_set)
-    roe         =['roe'] 
-    gross       =['gross'] 
-    revenue     =['revenue'] 
-    yoy_rev     =['yoy_rev'] 
-    profit      =['profit'] 
-    yoy_net     =['yoy_net'] 
-    cf_sale     =['cf_sale'] 
-    cf_sale_qoq =['cf_qoq'] 
+    roe         =['roe']
+    gross       =['gross']
+    revenue     =['revenue']
+    yoy_rev     =['yoy_rev']
+    profit      =['profit']
+    yoy_net     =['yoy_net']
+    cf_sale     =['cf_sale']
+    cf_sale_qoq =['cf_qoq']
 
     with open(csv_file_name, 'rb') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
