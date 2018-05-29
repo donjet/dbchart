@@ -35,6 +35,9 @@ CREATE TABLE IF NOT EXISTS `Y17Q3X`(
           PRIMARY KEY ( code))
        ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `Y17Q3X`(code CHAR(9) NOT NULL, roe         FLOAT,  gross       FLOAT, revenue     FLOAT, yoy_rev     FLOAT,  profit      FLOAT,  yoy_net     FLOAT,cf_sale     FLOAT, cf_sale_qoq FLOAT, PRIMARY KEY ( code))  ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
          ;
 
 CREATE TABLE IF NOT EXISTS `CF_Q_17Q2`(

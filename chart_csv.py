@@ -22,7 +22,7 @@ def paint(csv_content, csv_file_name):
 
     png_file_name = csv_file_name.split('.')[0]
     data_len = len(csv_content[0]) - 1
-
+    """
     if ((csv_content[5][data_len] > 20) and \
                (csv_content[5][data_len-1] > 20)
                and csv_content[5][data_len - 2] > 20) \
@@ -40,6 +40,7 @@ def paint(csv_content, csv_file_name):
                 csvwriter.writerow(os.path.basename(png_file_name)[2:])
     else:
         return
+    """
     fg = pl.figure()
     ax1 = fg.add_subplot(221)
     ax1.set_title("Revenue vs Gross",fontsize=12)
@@ -52,12 +53,9 @@ def paint(csv_content, csv_file_name):
     ax3 = fg.add_subplot(222)
     ax3.set_title("ROE vs Profit/Y",fontsize=12)
     roe_year = []
-    for i in range((data_len+3)/4) :
-        if not data_len%4:
-            roe_year.append(csv_content[0][i*4 + 4])
-        else:
-            roe_year.append(csv_content[0][i*4 +  data_len%4])
-    ax3.plot(list(range((data_len+3)/4) ), roe_year[0:], 'y')
+    for i in range(data_len/4) :
+        roe_year.append(csv_content[0][i*4 + 4 ])
+    ax3.plot(list(range(data_len/4) ), roe_year[0:], 'y')
 
     ax31 = ax3.twinx()
     cash_flow = []
