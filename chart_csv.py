@@ -80,8 +80,8 @@ def paint(csv_content, csv_file_name):
         profit.append(profit_last)
     ax31.plot(list(range((data_len+3)/4) ), cash_flow[0:], 'black')
     ax31.plot(list(range((data_len+3)/4) ), profit[0:], 'red')
-    print(cash_flow)
-    print(profit)
+    #print(cash_flow)
+    #print(profit)
 
     ax4 = fg.add_subplot(223)
     ax4.set_title("Cash Flow vs Profit",fontsize=12)
@@ -147,9 +147,10 @@ def adjust_to_quarter(csv_content):
             else:
                 csv_content[i][time_slot - j] = \
                     round(string.atof(csv_content[i][time_slot -j]),2)
-
+    """
     for j in range(8):
         print csv_content[j]
+    """
 
 def chart_csv(csv_file_name):
     row_count = 0
@@ -176,6 +177,7 @@ def chart_csv(csv_file_name):
                 cf_sale.append( row[7] )
                 cf_sale_qoq.append(row[8])
                 row_count +=1
+                print(row)
         csv_contents[0] = roe
         csv_contents[1] = gross
         csv_contents[2] = revenue

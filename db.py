@@ -32,7 +32,7 @@ def create_stk_tbl(stk_code):
             use_unicode=True)
     cur = conn.cursor()
     cur.execute('SET NAMES UTF8')
-    
+
     '''
         cur.execute("select * from Y17Q2 where                \
         code='600176.SH' union select * from Y17Q1 where code='600176.SH' union     \
@@ -60,7 +60,10 @@ def create_stk_tbl(stk_code):
         return
     conn.commit()
 
-    sql_cmd = "create table "+stk_code.split('.')[1]+stk_code.split('.')[0]
+    sql_cmd = "create table "+stk_code.split('.')[1]+stk_code.split('.')[0]+" \
+    (code CHAR(9) NOT NULL, roe         FLOAT,  gross       FLOAT, revenue \
+    FLOAT, yoy_rev     FLOAT,  profit      FLOAT,  yoy_net     FLOAT,cf_sale \
+    FLOAT, cf_sale_qoq FLOAT)"
     #sql_cmd = ""
     for j in range(len(all_code.time_quarter_set)):
         sql_cmd += " select * from " + all_code.time_quarter_set[j] + " where code=" + "'" + \
@@ -86,7 +89,7 @@ def create_stk_tbl(stk_code):
     sql_cmd = "SELECT * FROM  "+stk_code.split('.')[1]+stk_code.split('.')[0] + \
                 " INTO OUTFILE '/tmp/" + stk_code.split('.')[1]+stk_code.split('.')[0] + \
                 ".csv' FIELDS TERMINATED BY ','" + " LINES TERMINATED BY '\\r\\n'" 
-    print sql_cmd
+    #print sql_cmd
     try:
         cur.execute(sql_cmd)
     except:
