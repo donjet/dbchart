@@ -11,12 +11,14 @@ import getopt
 import MySQLdb
 import all_code
 import chart_csv
+import sort_csv
 
 def usage():
     print("-h --help: print this help message.")
     print("-f --file: csv file used to draw chart.")
     print("-c --code: only single stock code.")
     print("-a --all:  recreate all individual table.")
+    print("-s --sort: sort accordingly.")
 
 
 def create_stk_tbl(stk_code):
@@ -70,7 +72,7 @@ def create_stk_tbl(stk_code):
                 stk_code + "'"
         if j < (len(all_code.time_quarter_set)-1):
             sql_cmd += " union "
-    print sql_cmd
+    #print sql_cmd
     try:
         cur.execute(sql_cmd)
     except:
@@ -78,7 +80,7 @@ def create_stk_tbl(stk_code):
         return
 
     for row in cur.fetchall():
-        print(row)
+        pass #print(row)
         #print(row[1].decode('utf-8'))
 
     conn.commit()
@@ -110,16 +112,19 @@ def create_all_tbl_draw(skip_last_quarter):
             chart_csv.chart_it(["","-f", "/tmp/" + all_code.all_stk_codes[j].split('.')[1]
                     + all_code.all_stk_codes[j].split('.')[0] + ".csv"])
 
+def create_all_tbl_nodraw():
+    for j in range(len(all_code.all_stk_codes)):
+        create_stk_tbl(all_code.all_stk_codes[j])
 
 def get_from_db(argv):
     last_quarter = 0
     try:
         opts,args = getopt.getopt(argv[1:],
-                'lhaf:c:s:',['last','help','all','file=','code=','show='])
+                'lhasf:c:',['last','help','all','file=','code=','sort'])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
-    print(opts,args)
+    #print(opts,args)
 
     for opt, value in opts:
         if opt in("-h","--help"):
@@ -153,6 +158,9 @@ def get_from_db(argv):
             create_all_tbl_draw(last_quarter)
         elif opt in("-l","--last"):
             last_quarter = 1
+        elif opt in("-s","--sort"):
+            create_all_tbl_nodraw()
+            sort_csv.sort_dir("","-d",'/tmp')
         else:
             usage()
 

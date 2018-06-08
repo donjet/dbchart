@@ -22,7 +22,22 @@ def paint(csv_content, csv_file_name):
 
     png_file_name = csv_file_name.split('.')[0]
     data_len = len(csv_content[0]) - 1
+
     """
+    if ((csv_content[5][data_len] > 80) and \
+               (csv_content[5][data_len-1] > 80)    \
+               and csv_content[5][data_len - 2] > 80 \
+               and csv_content[5][data_len - 3] > 80 \
+               and csv_content[5][data_len - 4] > 80) \
+       and ((csv_content[3][data_len] > 10) and \
+               (csv_content[3][data_len-1] > 10)\
+               and csv_content[3][data_len - 2] > 10) \
+       and (csv_content[0][data_len/4*4] > 8):
+            with open('/tmp/filter_data.csv', 'a+') as csvfile:
+                csvwriter = csv.writer(csvfile, delimiter=',')
+                csvwriter.writerow(os.path.basename(png_file_name)[2:])
+    else:
+        return
     if ((csv_content[5][data_len] > 20) and \
                (csv_content[5][data_len-1] > 20)
                and csv_content[5][data_len - 2] > 20) \
@@ -147,10 +162,9 @@ def adjust_to_quarter(csv_content):
             else:
                 csv_content[i][time_slot - j] = \
                     round(string.atof(csv_content[i][time_slot -j]),2)
-    """
+
     for j in range(8):
         print csv_content[j]
-    """
 
 def chart_csv(csv_file_name):
     row_count = 0
@@ -177,7 +191,7 @@ def chart_csv(csv_file_name):
                 cf_sale.append( row[7] )
                 cf_sale_qoq.append(row[8])
                 row_count +=1
-                print(row)
+                #print(row)
         csv_contents[0] = roe
         csv_contents[1] = gross
         csv_contents[2] = revenue
