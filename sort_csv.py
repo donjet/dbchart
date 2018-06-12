@@ -111,8 +111,10 @@ def create_sort_info(csv_file_name):
             break
 
     if profit_qrt_cnt > 11 and cash_flow_cnt > 3:  #recent 3 years
+        stk_code = \
+        os.path.basename(csv_file_name).split('.')[0][2:]+'.'+os.path.basename(csv_file_name).split('.')[0][0:2]
         sort_info.append( [profit_qrt_cnt,round(profit_yoy_sum/profit_qrt_cnt, \
-            2),cash_flow_cnt,os.path.basename(csv_file_name).split('.')[0][2:]])
+            2),cash_flow_cnt,stk_code,all_code.gen_info_dict[stk_code][0],all_code.gen_info_dict[stk_code][1]])
     else:
         return
     #    sort_info = [csv_file_name.split('.')[0], profit_qrt_cnt, 0]
