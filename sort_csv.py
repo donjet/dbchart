@@ -151,6 +151,26 @@ def quick_sort(array):
 
     return array
 
+def sort_by_bank(array):
+    def recursive(begin, end, index):
+        if begin > end:
+            return
+        l, r = begin, end
+        pivot = array[l][index]
+        while l < r:
+            while l < r and array[r][index] > pivot:
+                r -= 1
+            while l < r and array[l][index] <= pivot:
+                 l += 1
+            array[l], array[r] = array[r], array[l]
+        array[l], array[begin] = array[begin], array[l]
+        recursive(begin, l - 1,index)
+        recursive(r + 1, end,index)
+
+    recursive(0, len(array) - 1,5)
+
+    return array
+
 def sort_dir(argv):
     global data_set_len
     global quarter_list
@@ -178,6 +198,12 @@ def sort_dir(argv):
     with open('/tmp/sorted.csv', 'a+') as csvfile:
         csvwriter = csv.writer(csvfile)
         csvwriter.writerows(sort_info)
+
+    sort_by_bank(sort_info)
+    with open('/tmp/sortedBank.csv', 'a+') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerows(sort_info)
+
 
 
 if __name__ == "__main__":
