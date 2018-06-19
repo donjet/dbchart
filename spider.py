@@ -11,6 +11,7 @@ import string
 import getopt
 import all_code
 import subprocess
+import time
 """
     Download all fundamental info from sina finance data.
 """
@@ -152,6 +153,7 @@ def wget_all_info():
         wget_stk_profit(stock_code)
         wget_stk_debet(stock_code)
         wget_stk_cashflow(stock_code)
+        time.sleep(10)
 
 def unit_test():
     for i in range(len(testing_stk_code)):
@@ -159,6 +161,7 @@ def unit_test():
         wget_stk_profit(stock_code)
         wget_stk_debet(stock_code)
         wget_stk_cashflow(stock_code)
+        time.sleep(10)
 
 if __name__ == "__main__":
     unit_test()
