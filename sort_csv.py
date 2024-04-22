@@ -27,7 +27,7 @@ def adjust_to_quarter(csv_content):
     print( time_slot)
     for j in range(time_slot):
         if j < (time_slot-1):
-	    if not quarter_list[data_set_len - 1 - j ].endswith('Q1X'):
+            if not quarter_list[data_set_len - 1 - j ].endswith('Q1X'):
                 csv_content[2][time_slot - j ] = round(
                     string.atof(csv_content[2][time_slot -j ]) -\
                                     string.atof(csv_content[2][time_slot -j - 1]),2)

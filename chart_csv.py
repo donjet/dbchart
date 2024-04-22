@@ -32,7 +32,7 @@ def paint(csv_content, csv_file_name):
        and ((csv_content[3][data_len] > 10) and \
                (csv_content[3][data_len-1] > 10)\
                and csv_content[3][data_len - 2] > 10) \
-       and (csv_content[0][data_len/4*4] > 8):
+       and (csv_content[0][int(data_len//4)*4] > 8):
             with open('/tmp/filter_data.csv', 'a+') as csvfile:
                 csvwriter = csv.writer(csvfile, delimiter=',')
                 csvwriter.writerow(os.path.basename(png_file_name)[2:])
@@ -68,20 +68,21 @@ def paint(csv_content, csv_file_name):
     ax3 = fg.add_subplot(222)
     ax3.set_title("ROE vs Profit/Y",fontsize=12)
     roe_year = []
-    for i in range(data_len/4) :
+    data_len_year = data_len//4
+    for i in range(data_len_year):
         roe_year.append(csv_content[0][i*4 + 4 ])
-    ax3.plot(list(range(data_len/4) ), roe_year[0:], 'y')
+    ax3.plot(list(range(int(data_len//4)) ), roe_year[0:], 'y')
 
     ax31 = ax3.twinx()
     cash_flow = []
     profit = []
     i = 0
-    for i in range(data_len/4):
+    for i in range(data_len_year):
         cash_flow.append(csv_content[6][i*4+1] + csv_content[6][i*4+2] \
                 + csv_content[6][i*4+3] + csv_content[6][i*4+4])
         profit.append(csv_content[4][i*4+1] + csv_content[4][i*4+2] \
                 + csv_content[4][i*4+3] + csv_content[4][i*4+4])
-    i = data_len/4
+    i = int(data_len_year)
     cash_flow_last = 0.0
     profit_last = 0.0
     if  (data_len%4):
@@ -93,8 +94,9 @@ def paint(csv_content, csv_file_name):
         profit_last = profit_last * 4 / (data_len%4)
         cash_flow.append(cash_flow_last)
         profit.append(profit_last)
-    ax31.plot(list(range((data_len+3)/4) ), cash_flow[0:], 'black')
-    ax31.plot(list(range((data_len+3)/4) ), profit[0:], 'red')
+    data_len_next = (data_len+3)//4
+    ax31.plot(list(range(data_len_next) ), cash_flow[0:], 'black')
+    ax31.plot(list(range(data_len_next) ), profit[0:], 'red')
     #print(cash_flow)
     #print(profit)
 
@@ -136,35 +138,32 @@ def adjust_to_quarter(csv_content):
 
 
     time_slot = len(csv_content[0]) - 1
-    print( time_slot)
+    print(time_slot)
     for j in range(time_slot):
         if j < (time_slot-1):
-	    if not quarter_list[data_set_len - 1 - j ].endswith('Q1X'):
-                csv_content[2][time_slot - j ] = round(
-                    string.atof(csv_content[2][time_slot -j ]) -\
-                                    string.atof(csv_content[2][time_slot -j - 1]),2)
-                csv_content[4][time_slot - j ] = round(
-                    string.atof(csv_content[4][time_slot -j ]) -\
-                                    string.atof(csv_content[4][time_slot -j -
-                                        1]), 2)
+            if not quarter_list[data_set_len - 1 - j].endswith('Q1X'):
+                csv_content[2][time_slot - j] = round(float(csv_content[2][time_slot - j]) - \
+                                                      float(csv_content[2][time_slot- j -1]),2)
+                csv_content[4][time_slot - j] = round(float(csv_content[4][time_slot - j]) -\
+                                                      float(csv_content[4][time_slot - j - 1]), 2)
             else:
                 csv_content[2][time_slot - j ] =  \
-                    round(string.atof(csv_content[2][time_slot -j ]),2)
+                    round(float(csv_content[2][time_slot -j ]),2)
                 csv_content[4][time_slot - j ] =  \
-                    round(string.atof(csv_content[4][time_slot -j ]),2)
+                    round(float(csv_content[4][time_slot -j ]),2)
         csv_content[1][time_slot - j ] = \
-                    round(string.atof(csv_content[1][time_slot - j ]),2)
+                    round(float(csv_content[1][time_slot - j ]),2)
         csv_content[0][time_slot - j ] = \
-                    round(string.atof(csv_content[0][time_slot- j ]),2)
+                    round(float(csv_content[0][time_slot- j ]),2)
         for i in range(8):
             if csv_content[i][time_slot - j] == str('\\N'):
                 csv_content[i][time_slot - j] = 0
             else:
                 csv_content[i][time_slot - j] = \
-                    round(string.atof(csv_content[i][time_slot -j]),2)
+                    round(float(csv_content[i][time_slot -j]),2)
 
     for j in range(8):
-        print csv_content[j]
+        print(csv_content[j])
 
 def chart_csv(csv_file_name):
     row_count = 0
@@ -179,7 +178,7 @@ def chart_csv(csv_file_name):
     cf_sale     =['cf_sale']
     cf_sale_qoq =['cf_qoq']
 
-    with open(csv_file_name, 'rb') as csv_file:
+    with open(csv_file_name, 'r') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:
                 roe.append( row[1] )

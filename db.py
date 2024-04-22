@@ -8,10 +8,11 @@ import codecs
 import csv
 import string
 import getopt
-import MySQLdb
+import pymysql
 import all_code
 import chart_csv
 import sort_csv
+from importlib import reload
 
 def usage():
     print("-h --help: print this help message.")
@@ -24,11 +25,11 @@ def usage():
 def create_stk_tbl(stk_code):
     global time_quarter_set
 
-    conn = MySQLdb.connect(
+    conn = pymysql.connect(
             host = 'localhost',
             port = 3306,
             user = 'root',
-            passwd = '123456',
+            passwd = '123507',
             db = 'stock_finance',
             charset="utf8",
             use_unicode=True)
@@ -124,7 +125,7 @@ def get_from_db(argv):
     except getopt.GetoptError:
         usage()
         sys.exit(2)
-    #print(opts,args)
+    print(opts,args)
 
     for opt, value in opts:
         if opt in("-h","--help"):
@@ -132,11 +133,11 @@ def get_from_db(argv):
             sys.exit()
         elif opt in("-f","--file"):
             csv_file_name = value
-            with open(csv_file_name, 'rb') as csv_file:
+            with open(csv_file_name, 'r') as csv_file:
                 csv_reader = csv.reader(csv_file, delimiter=',')
                 for row in csv_reader:
                     stk_code = row[0]
-                    print stk_code
+                    print(stk_code)
                     create_stk_tbl(stk_code)
                     if last_quarter == 1:
                         chart_csv.chart_it(["","-l","-f", "/tmp/" + stk_code.split('.')[1]
@@ -167,7 +168,7 @@ def get_from_db(argv):
 
 if __name__ == "__main__":
     reload(sys)
-    sys.setdefaultencoding('utf-8')
+    #sys.setdefaultencoding('utf-8')
 
     get_from_db(sys.argv)
 
